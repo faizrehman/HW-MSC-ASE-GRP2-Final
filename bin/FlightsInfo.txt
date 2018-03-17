@@ -1,0 +1,3 @@
+FZ363,'Fly Dubai','2018-08-28',32,3
+EK320,'Emirates','2018-08-13',40,3
+PK661,'Pakistan International Airline','2018-08-13',40,3
