@@ -6,10 +6,12 @@ import java.util.List;
 import java.util.Queue;
 
 import exceptions.InValidCheckInException;
+import interfaces.QueueObserver;
+import interfaces.QueueSubject;
 
 
 
-public class AllBooking  {
+public class AllBooking implements QueueSubject {
 
 	private HashMap<String, Booking> bookingList = new HashMap<String, Booking>();
 	private static AllBooking bookingInstance;
@@ -32,8 +34,9 @@ public class AllBooking  {
 	public synchronized  Booking getFirstbooking()
 	{
 		synchronized(AllBooking.class) { // lock block
-			
-		return BookingQue.poll();
+		Booking b	=BookingQue.poll();
+		notifyCheckInObservers(b, 0);
+		return b;
 		}
 	}
 	
@@ -148,9 +151,57 @@ public class AllBooking  {
 		return allEntries.toString();
 
 	}
+	
+	public String CheckedBookingDetails() {
+		StringBuffer allEntries = new StringBuffer();
+
+		for (Booking details : bookingList.values()) {
+			if(details.IsCheckedIn()){
+			allEntries.append(details.getBookingReference() + "		" + details.getPassenger().getPassengerFName() + " "
+					+ details.getPassenger().getPassengerLName() + "		" + details.IsCheckedIn());
+			allEntries.append('\n');}
+		}
+		return allEntries.toString();
+
+	}
 
 	public HashMap<String, Booking> getAllBookings() {
 		return bookingList;
+	}
+
+
+	// OBSERVER PATTERN
+			// SUBJECT must be able to register, remove and notify observers
+			// list to hold any observers
+	private List<QueueObserver> registeredObservers = new LinkedList<QueueObserver>();
+
+	
+	// methods to register, remove and notify observers
+				public void registerObserver(QueueObserver obs) {
+					registeredObservers.add(obs);
+				}
+
+				public void removeObserver(QueueObserver obs) {
+					registeredObservers.remove(obs);
+				}
+
+				public void notifyObservers(Booking obj) {
+					for (QueueObserver obs : registeredObservers)
+						obs.update(obj);
+				}
+
+
+	@Override
+	public void notifyCheckInObservers(Booking obj, int DeskNumber) {
+		// TODO Auto-generated method stub
+		for (QueueObserver obs : registeredObservers)
+			obs.updateQueue(obj,DeskNumber);
+	}
+
+	@Override
+	public void notifyFlightBoard(Booking obj, String FlightCode) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

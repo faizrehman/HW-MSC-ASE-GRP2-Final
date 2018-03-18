@@ -3,6 +3,7 @@ package model;
 import java.util.LinkedList;
 import java.util.List;
 
+import exceptions.InValidCheckInException;
 import interfaces.QueueObserver;
 import interfaces.QueueSubject;
 
@@ -35,14 +36,26 @@ public class CheckInDesk implements QueueSubject,Runnable  {
 		while (true)
 		{
 			try {
-				Booking b=AllBookings.getFirstbooking();
+				if(AllBookings.getQueueCount()!=0)
+				{
+				Booking b=AllBookings.getFirstbooking();	
 				notifyObservers(b);
 				notifyCheckInObservers(b,DeskNumber);
+				
+				AllBookings.UpdateCheckInStatus(b.getBookingReference(), b.getCheckedInWeight(), b.getBaggageDimension());
 				Thread.sleep(QueueSpeed);
+				notifyFlightBoard(b, b.getFlightCode());
+				
+				}
+				
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}catch (InValidCheckInException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+			
 		}
 		
 	}
@@ -72,6 +85,12 @@ public class CheckInDesk implements QueueSubject,Runnable  {
 				// TODO Auto-generated method stub
 				for (QueueObserver obs : registeredObservers)
 					obs.updateQueue(obj,DeskNumber);
+			}
+			@Override
+			public void notifyFlightBoard(Booking obj, String FlightCode) {
+				// TODO Auto-generated method stub
+				for (QueueObserver obs : registeredObservers)
+					obs.updateFlightBoard(obj, FlightCode);
 			}
 			
 			

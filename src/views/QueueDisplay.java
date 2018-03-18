@@ -19,6 +19,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.Font;
 
@@ -44,12 +45,13 @@ public class QueueDisplay extends JFrame implements QueueObserver {
 	/**
 	 * Create the panel.
 	 */
-	public QueueDisplay(AllBooking bobj,BookingQueue obj,CheckInDisplay chkin1,CheckInDisplay chkin2) {
+	public QueueDisplay(AllBooking bobj,BookingQueue obj,CheckInDisplay chkin1,CheckInDisplay chkin2,FlightStatusDisplay flightView[]) {
 		objbooking=bobj;
 		textField.setText("2000");
 		textField.setColumns(5);
 		
 		obj.registerObserver(this);
+		bobj.registerObserver(this);
 		//chkin1.registerObserver(this);
 		
 		bookingqueue=obj;
@@ -92,12 +94,22 @@ public class QueueDisplay extends JFrame implements QueueObserver {
 			// add analog display in the middle
 			add(jpanel, BorderLayout.NORTH);
 			// add analog display in the middle
-			add(chkin1, BorderLayout.EAST);
 			
-			add(chkin2, BorderLayout.WEST);
+			jpanel=new JPanel();
+			jpanel.setPreferredSize(new Dimension(830, 300));
+	        
 			
+			jpanel.add(chkin1, BorderLayout.EAST);
 			
-			setSize(840, 480);
+			jpanel.add(chkin2, BorderLayout.WEST);
+			
+			for(FlightStatusDisplay f:flightView)
+			{
+				jpanel.add(f,BorderLayout.EAST);	
+			}
+			add(jpanel);
+			
+			setSize(840, 680);
 			this.setLocationRelativeTo(null);
 		      
 			setVisible(true);
@@ -120,8 +132,8 @@ public class QueueDisplay extends JFrame implements QueueObserver {
 	public void update(Booking obj) {
 		// TODO Auto-generated method stub
 		
-	
-		dtm.addRow(new Object[] { obj.getBookingReference(), obj.getPassenger().getPassengerFullName() , obj.getCheckedInWeight(),
+		//dtm.insertRow(row, rowData);
+		dtm.insertRow(0,new Object[] { obj.getBookingReference(), obj.getPassenger().getPassengerFullName() , obj.getCheckedInWeight(),
                 obj.getBaggageDimension(), obj.getFlightCode()});
 		
 		if(!objbooking.getActiveQueue().isEmpty())
@@ -130,17 +142,44 @@ public class QueueDisplay extends JFrame implements QueueObserver {
 		}
 		else
 		{
-
+			
 			lblNewLabel.setText("There are currently " + "0" + " people waiting in the queue:");
 		}
 	}
 
 
-	
+	private void removeSelectedRow(String ReferenceNum)
+	{
+		for ( int i=dtm.getRowCount()-1; i>=0; i-- ) { 
+			if (dtm.getValueAt(i,0) == ReferenceNum) 
+			dtm.removeRow(i); 
+			return;
+			} 
+		
+	}
 
 
 	@Override
 	public void updateQueue(Booking obj, int DeskNumber) {
+		// TODO Auto-generated method stub
+		removeSelectedRow(obj.getBookingReference());
+		//JOptionPane.showMessageDialog(this, obj.getBookingReference());
+		if(!objbooking.getActiveQueue().isEmpty())
+		{
+		lblNewLabel.setText("There are currently " + objbooking.getActiveQueue().size() + " people waiting in the queue:");
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(this,objbooking.CheckedBookingDetails());
+			
+			lblNewLabel.setText("There are currently " + "0" + " people waiting in the queue:");
+			
+		}
+	}
+
+
+	@Override
+	public void updateFlightBoard(Booking obj, String FlightCode) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -31,6 +31,14 @@ private HashMap<String,Flight> flightList;
 		flightList.put(a.getFlightCode(), a);	
 	}
 	
+	
+	public Flight getFlightByID(String FlightCode) throws Exception
+	{		
+		return flightList.get(FlightCode);
+		
+	}
+		
+	
 	public String FlightDetails()
 	{
 		StringBuffer allEntries=new StringBuffer();

@@ -12,6 +12,7 @@ public class Booking {
 	private boolean CheckIn;
 	private Integer CheckedInWeight;
 	private String  BaggageDimension;
+	private Integer WeightOverCharge;
 
 	public Booking(String BookingReference, Passenger PassengerData,
 			String FlightCode,boolean CheckIn) throws IllegalArgumentException
@@ -43,8 +44,10 @@ public class Booking {
 	
 
 			Integer length,breadth,height;
-		if(BaggageDimension.matches("\\d{2}x\\d{2}x\\d{2}"))
-		{
+		//if(BaggageDimension.matches("\\d{2}x\\d{2}x\\d{2}"))
+			if(BaggageDimension.length()>2)
+				
+			{
 			String[] dimension=BaggageDimension.split("x");
 		 	length =Integer.parseInt(dimension[0]); // l
 			breadth =Integer.parseInt(dimension[1]); // b
@@ -111,6 +114,12 @@ public class Booking {
 	public void setBaggageDimension(String baggageDimension) {
 		
 		BaggageDimension = baggageDimension;
+	}
+	public Integer getWeightOverCharge() {
+		return WeightOverCharge;
+	}
+	public void setWeightOverCharge(Integer weightOverCharge) {
+		WeightOverCharge = weightOverCharge;
 	}
 	
 	

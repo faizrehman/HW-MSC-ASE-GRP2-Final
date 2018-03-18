@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 
+import javax.swing.JOptionPane;
+
 import exceptions.InValidCheckInException;
 import interfaces.QueueObserver;
 import interfaces.QueueSubject;
@@ -13,10 +15,12 @@ public class BookingQueue implements QueueSubject,Runnable {
 
 	private static BookingQueue bookingInstance;
 	AllBooking  AllBookings;
+	AllFlight  AllFlights;
 	private int QueueSpeed=2000;
 	
-	private BookingQueue(AllBooking obj) {
+	private BookingQueue(AllBooking obj,AllFlight objFlights) {
 		AllBookings=obj;
+		AllFlights=objFlights;
 	}
 
 	public void setQueueSpeed(int speed)
@@ -25,11 +29,11 @@ public class BookingQueue implements QueueSubject,Runnable {
 	}
 	
 	
-	public static synchronized BookingQueue getInstance(AllBooking obj) {
+	public static synchronized BookingQueue getInstance(AllBooking obj,AllFlight objFlights) {
 		if (bookingInstance == null) // only if no instance
 		synchronized(BookingQueue.class) { // lock block
 		if (bookingInstance == null) // and re-check
-			bookingInstance = new BookingQueue(obj);
+			bookingInstance = new BookingQueue(obj,objFlights);
 		}
 		return bookingInstance;
 		}
@@ -49,13 +53,33 @@ public class BookingQueue implements QueueSubject,Runnable {
 				int randomLength = ran.nextInt(19)+1;
 				int randomWidth = ran.nextInt(19)+1;
 				int randomheight = ran.nextInt(19)+1;
+				int flightAllowedWeight=0,flightOverChargeRate=0,BaggageOverWeight=0,OverChargeApplicable=0;
+				try {
+				 Flight f=AllFlights.getFlightByID(b.getFlightCode());	 
+				 flightAllowedWeight=f.getMaxAllowedWeight();
+				 flightOverChargeRate=f.getExtraChargePerKg();
+				 
+				 BaggageOverWeight=randomWeight - flightAllowedWeight;
+				
+				 if(BaggageOverWeight>0)
+				{
+					OverChargeApplicable=BaggageOverWeight*flightOverChargeRate;
+					
+					
+				}
+				 
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				
 				
 				try {
-					
+					b.setWeightOverCharge(OverChargeApplicable);
 					b.setCheckedInWeight(randomWeight);
 					b.setBaggageDimension(String.valueOf(randomLength) +  "x" + String.valueOf(randomWidth) +  "x" + String.valueOf(randomheight));
 				
+					
 				} catch (InValidCheckInException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -71,6 +95,7 @@ public class BookingQueue implements QueueSubject,Runnable {
 				System.out.println(e.getMessage());	
 			}
 		}
+		
 		
 		
 		
@@ -102,6 +127,12 @@ public class BookingQueue implements QueueSubject,Runnable {
 
 			@Override
 			public void notifyCheckInObservers(Booking obj, int DeskNumber) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void notifyFlightBoard(Booking obj, String FlightCode) {
 				// TODO Auto-generated method stub
 				
 			}

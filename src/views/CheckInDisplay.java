@@ -16,17 +16,14 @@ public class CheckInDisplay extends JPanel implements QueueObserver{
 	JTextArea textPane = new JTextArea(5,32);
 	private static CheckInDisplay CheckInObj;
 	
-	
-	
-	
-	public CheckInDisplay(CheckInDesk obj)
+	public CheckInDisplay(CheckInDesk obj, int Counter)
 	{
 		obj.registerObserver(this);
 		bookingQueue=obj;
 	
 		JPanel jpanel=new JPanel();
 		jpanel.setPreferredSize(new Dimension(400, 200));
-		JLabel lblNewLabel = new JLabel("Counter 2");
+		JLabel lblNewLabel = new JLabel("Counter " + Counter);
 		lblNewLabel.setFont(new Font("Lucida Grande", Font.BOLD, 16));
 	    jpanel.add(lblNewLabel);
 	     
@@ -60,8 +57,9 @@ public class CheckInDisplay extends JPanel implements QueueObserver{
 				try
 				{
 				textPane.setText(b.getPassenger().getPassengerFullName() + " is dropping off " +
-							"1 bag of " + String.valueOf(b.getCheckedInWeight()) + ". A baggage fee of " +  "AED is due.");
-			}catch(Exception ex)
+							"1 bag of " + String.valueOf(b.getCheckedInWeight()) + "KG for flight " + b.getFlightCode() +  ". A baggage fee of " + b.getWeightOverCharge() +  " AED is due.");
+			
+				}catch(Exception ex)
 				{}
 				}
 
@@ -71,6 +69,13 @@ public class CheckInDisplay extends JPanel implements QueueObserver{
 
 			@Override
 			public void updateQueue(Booking obj, int DeskNumber) {
+				// TODO Auto-generated method stub
+				
+			}
+
+
+			@Override
+			public void updateFlightBoard(Booking obj, String FlightCode) {
 				// TODO Auto-generated method stub
 				
 			}

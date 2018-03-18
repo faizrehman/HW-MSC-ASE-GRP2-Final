@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
 
 import javax.swing.JOptionPane;
 
@@ -18,6 +19,7 @@ import model.CheckInDesk;
 import model.Flight;
 import model.Passenger;
 import views.CheckInDisplay;
+import views.FlightStatusDisplay;
 import views.QueueDisplay;
 
 
@@ -45,29 +47,41 @@ public class MainCheckInCounters {
 		String flightsPath="bin/FlightsInfo.txt";
 		
 		//Populate all bookings from CSV
-		boolean retSuccessBookings = PopulateAllBookings(bookingsPath);
 		boolean retSuccessFlights = PopulateAllFlights(flightsPath);
-	
+		boolean retSuccessBookings = PopulateAllBookings(bookingsPath);
+		
 		
 		
 		
 		CheckInDesk chkinmodel=new CheckInDesk(bookings,1);
-		CheckInDisplay view2 = new CheckInDisplay(chkinmodel);	
+		CheckInDisplay view2 = new CheckInDisplay(chkinmodel,2);	
 		CheckInDeskController controller2 =new CheckInDeskController(view2, chkinmodel);
 	
 		CheckInDesk chkinmodel2=new CheckInDesk(bookings,2);
-		CheckInDisplay view3 = new CheckInDisplay(chkinmodel2);	
+		CheckInDisplay view3 = new CheckInDisplay(chkinmodel2,1);	
 		CheckInDeskController controller3 =new CheckInDeskController(view3, chkinmodel2);
 	
+		CheckInDesk arrChkInModel[]={chkinmodel,chkinmodel2};
+		
+		FlightStatusDisplay viewFlightStatusDisplay[]=new FlightStatusDisplay[flights.getAllFlights().size()];	
+		int i=0;
+		for(Flight f : flights.getAllFlights().values())
+		{
+			viewFlightStatusDisplay[i++]= new FlightStatusDisplay(arrChkInModel,f.getFlightCode());	
+		}
+		
+		//FlightStatusDisplay viewFlightStatusDisplay1 = new FlightStatusDisplay(arrChkInModel,"2");	
+		//FlightStatusDisplay viewFlightStatusDisplay2 = new FlightStatusDisplay(arrChkInModel,"2");	
+		//FlightStatusDisplay viewFlightStatusDisplay3  = new FlightStatusDisplay(arrChkInModel,"2");	
 		
 		
 		
-		BookingQueue model=BookingQueue.getInstance(bookings);
-		QueueDisplay view = new QueueDisplay(bookings,model,view2,view3);	
+		BookingQueue model=BookingQueue.getInstance(bookings,flights);
+		QueueDisplay view = new QueueDisplay(bookings,model,view2,view3,viewFlightStatusDisplay);	
 		QueueController controller =new QueueController(view, model);
 		
 		Thread thread1 =
-				new Thread(BookingQueue.getInstance(bookings));
+				new Thread(BookingQueue.getInstance(bookings,flights));
 				thread1.start();
 	
 				
