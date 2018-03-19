@@ -45,7 +45,7 @@ public class QueueDisplay extends JFrame implements QueueObserver {
 	/**
 	 * Create the panel.
 	 */
-	public QueueDisplay(AllBooking bobj,BookingQueue obj,CheckInDisplay chkin1,CheckInDisplay chkin2,FlightStatusDisplay flightView[]) {
+	public QueueDisplay(AllBooking bobj,BookingQueue obj,CheckInDisplay chkin1,CheckInDisplay chkin2,FlightStatusDisplay flightView[],RejectionStatusDisplay viewRejectionBoard) {
 		objbooking=bobj;
 		textField.setText("2000");
 		textField.setColumns(5);
@@ -103,13 +103,17 @@ public class QueueDisplay extends JFrame implements QueueObserver {
 			
 			jpanel.add(chkin2, BorderLayout.WEST);
 			
+			jpanel.add(viewRejectionBoard, BorderLayout.CENTER);
+			
+			
+			
 			for(FlightStatusDisplay f:flightView)
 			{
 				jpanel.add(f,BorderLayout.EAST);	
 			}
 			add(jpanel);
 			
-			setSize(840, 680);
+			setSize(840, 980);
 			this.setLocationRelativeTo(null);
 		      
 			setVisible(true);
@@ -170,7 +174,7 @@ public class QueueDisplay extends JFrame implements QueueObserver {
 		}
 		else
 		{
-			JOptionPane.showMessageDialog(this,objbooking.CheckedBookingDetails());
+			//JOptionPane.showMessageDialog(this,objbooking.CheckedBookingDetails());
 			
 			lblNewLabel.setText("There are currently " + "0" + " people waiting in the queue:");
 			
@@ -182,6 +186,14 @@ public class QueueDisplay extends JFrame implements QueueObserver {
 	public void updateFlightBoard(Booking obj, String FlightCode) {
 		// TODO Auto-generated method stub
 		
+	}
+
+
+	@Override
+	public void updateRejectionBoard(Booking obj, String FlightCode) {
+		// TODO Auto-generated method stub
+		//JOptionPane.showMessageDialog(null,FlightCode,"Alert", JOptionPane.ERROR_MESSAGE);
+
 	}
 
 

@@ -14,13 +14,16 @@ public class CheckInDesk implements QueueSubject,Runnable  {
 	//private static CheckInDesk checkInInstance;
 	
 	AllBooking  AllBookings;
+	AllFlight Allflights;
 
 	
 	
 	
-	public CheckInDesk(AllBooking obj,int pDeskNumber) {
+	public CheckInDesk(AllBooking obj,int pDeskNumber,AllFlight pAllflights) {
 		AllBookings=obj;
+		Allflights=pAllflights;
 		DeskNumber=pDeskNumber;
+		
 	}
 	public void setQueueSpeed(int speed)
 	{
@@ -41,11 +44,22 @@ public class CheckInDesk implements QueueSubject,Runnable  {
 				Booking b=AllBookings.getFirstbooking();	
 				notifyObservers(b);
 				notifyCheckInObservers(b,DeskNumber);
+				//notifyFlightBoard(b, b.getFlightCode());
+					
 				
-				AllBookings.UpdateCheckInStatus(b.getBookingReference(), b.getCheckedInWeight(), b.getBaggageDimension());
-				Thread.sleep(QueueSpeed);
-				notifyFlightBoard(b, b.getFlightCode());
-				
+				if(Allflights.getFlightByID(b.getFlightCode()).isCheckInOpen()){
+						
+					AllBookings.UpdateCheckInStatus(b.getBookingReference(), b.getCheckedInWeight(), b.getBaggageDimension());
+						Thread.sleep(QueueSpeed);
+						notifyFlightBoard(b, b.getFlightCode());
+						}
+				else
+					{
+					//Thread.sleep(QueueSpeed);
+					//AllBookings.AddinRejectedQueue(b);
+					notifyRejectionBoard(b, b.getFlightCode());					
+					Thread.sleep(QueueSpeed);
+					}
 				}
 				
 			} catch (InterruptedException e) {
@@ -54,13 +68,16 @@ public class CheckInDesk implements QueueSubject,Runnable  {
 			}catch (InValidCheckInException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}catch(Exception e)
+			{
+				
+				
 			}
 			
 		}
 		
 	}
 	
-
 	// OBSERVER PATTERN
 			// SUBJECT must be able to register, remove and notify observers
 			// list to hold any observers
@@ -91,6 +108,13 @@ public class CheckInDesk implements QueueSubject,Runnable  {
 				// TODO Auto-generated method stub
 				for (QueueObserver obs : registeredObservers)
 					obs.updateFlightBoard(obj, FlightCode);
+			}
+			@Override
+			public void notifyRejectionBoard(Booking obj, String FlightCode) {
+				// TODO Auto-generated method stub
+				for (QueueObserver obs : registeredObservers)
+					obs.updateRejectionBoard(obj, FlightCode);
+				
 			}
 			
 			

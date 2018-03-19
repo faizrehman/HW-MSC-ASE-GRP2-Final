@@ -17,7 +17,9 @@ public class AllBooking implements QueueSubject {
 	private static AllBooking bookingInstance;
 	private Queue<Booking> QAllBookings = new LinkedList<Booking>();
 	private  Queue<Booking> BookingQue = new LinkedList<Booking>();
+	private  Queue<Booking> RejectedQue = new LinkedList<Booking>();
 
+	
 	public   int getQueueCount()
 	{
 		
@@ -29,6 +31,25 @@ public class AllBooking implements QueueSubject {
 		
 	 BookingQue.add(b);
 	
+	}
+	
+	
+	public synchronized void AddinRejectedQueue(Booking b)
+	{
+		synchronized(AllBooking.class) { // lock block
+			
+		RejectedQue.add(b);
+		}
+	}
+	
+	
+	public synchronized  Booking getFirstRejected()
+	{
+		synchronized(AllBooking.class) { // lock block
+		Booking b	=RejectedQue.poll();
+		//notifyCheckInObservers(b, 0);
+		return b;
+		}
 	}
 	
 	public synchronized  Booking getFirstbooking()
@@ -165,6 +186,18 @@ public class AllBooking implements QueueSubject {
 
 	}
 
+	public HashMap<String, Booking> BookingsByFlightCode(String pFlightCode) {
+		HashMap<String, Booking> retbookingList = new HashMap<String, Booking>();
+		for (Booking details : bookingList.values()) {
+			if(details.getFlightCode().equals(pFlightCode)){
+			
+				retbookingList.put(details.getBookingReference(),details);
+			}
+		}
+		return retbookingList;
+
+	}
+	
 	public HashMap<String, Booking> getAllBookings() {
 		return bookingList;
 	}
@@ -202,6 +235,14 @@ public class AllBooking implements QueueSubject {
 	public void notifyFlightBoard(Booking obj, String FlightCode) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void notifyRejectionBoard(Booking obj, String FlightCode) {
+		// TODO Auto-generated method stub
+		for (QueueObserver obs : registeredObservers)
+			obs.updateRejectionBoard(obj,FlightCode);
+	
 	}
 	
 }

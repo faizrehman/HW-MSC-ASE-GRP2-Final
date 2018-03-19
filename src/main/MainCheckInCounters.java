@@ -21,6 +21,7 @@ import model.Passenger;
 import views.CheckInDisplay;
 import views.FlightStatusDisplay;
 import views.QueueDisplay;
+import views.RejectionStatusDisplay;
 
 
 public class MainCheckInCounters {
@@ -53,11 +54,11 @@ public class MainCheckInCounters {
 		
 		
 		
-		CheckInDesk chkinmodel=new CheckInDesk(bookings,1);
+		CheckInDesk chkinmodel=new CheckInDesk(bookings,1,flights);
 		CheckInDisplay view2 = new CheckInDisplay(chkinmodel,2);	
 		CheckInDeskController controller2 =new CheckInDeskController(view2, chkinmodel);
 	
-		CheckInDesk chkinmodel2=new CheckInDesk(bookings,2);
+		CheckInDesk chkinmodel2=new CheckInDesk(bookings,2,flights);
 		CheckInDisplay view3 = new CheckInDisplay(chkinmodel2,1);	
 		CheckInDeskController controller3 =new CheckInDeskController(view3, chkinmodel2);
 	
@@ -67,23 +68,23 @@ public class MainCheckInCounters {
 		int i=0;
 		for(Flight f : flights.getAllFlights().values())
 		{
-			viewFlightStatusDisplay[i++]= new FlightStatusDisplay(arrChkInModel,f.getFlightCode());	
+			viewFlightStatusDisplay[i++]= new FlightStatusDisplay(arrChkInModel,f.getFlightCode(),bookings,flights);	
 		}
+			
 		
-		//FlightStatusDisplay viewFlightStatusDisplay1 = new FlightStatusDisplay(arrChkInModel,"2");	
-		//FlightStatusDisplay viewFlightStatusDisplay2 = new FlightStatusDisplay(arrChkInModel,"2");	
-		//FlightStatusDisplay viewFlightStatusDisplay3  = new FlightStatusDisplay(arrChkInModel,"2");	
+		RejectionStatusDisplay viewRejectionBoard=new RejectionStatusDisplay(arrChkInModel);
 		
 		
 		
 		BookingQueue model=BookingQueue.getInstance(bookings,flights);
-		QueueDisplay view = new QueueDisplay(bookings,model,view2,view3,viewFlightStatusDisplay);	
+		QueueDisplay view = new QueueDisplay(bookings,model,view2,view3,viewFlightStatusDisplay,viewRejectionBoard);	
 		QueueController controller =new QueueController(view, model);
 		
 		Thread thread1 =
 				new Thread(BookingQueue.getInstance(bookings,flights));
 				thread1.start();
 	
+				
 				
 				try {
 					Thread.sleep(8000);
@@ -95,13 +96,14 @@ public class MainCheckInCounters {
 				Thread thread2 =
 						new Thread(chkinmodel);
 						thread2.start();
-					
 						
-						
-						Thread thread3 =
-								new Thread(chkinmodel2);
-								thread3.start();
-				
+				Thread thread3 =
+						new Thread(chkinmodel2);
+						thread3.start();
+
+								
+								
+								
 			
 	}
 

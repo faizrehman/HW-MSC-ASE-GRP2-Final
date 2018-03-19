@@ -7,6 +7,7 @@ public class Flight {
 	private String  FlightTime;
 	private Integer MaxAllowedWeight;	
 	private Integer ExtraChargePerKg;
+	private boolean CheckInOpen;
 	
 	public Flight(String FlightCode, Carrier Carrier,
 			String FlightTime,int MaxAllowedWeight,Integer ExtraChargePerKg)  throws IllegalArgumentException
@@ -24,6 +25,7 @@ public class Flight {
 		this.FlightTime = FlightTime;
 		this.MaxAllowedWeight = MaxAllowedWeight;	
 		this.ExtraChargePerKg = ExtraChargePerKg;
+		this.CheckInOpen=true;
 		
 	}
 	
@@ -46,6 +48,14 @@ public class Flight {
 	public Integer getExtraChargePerKg() 
 	{
 		return ExtraChargePerKg;
+	}
+
+	public boolean isCheckInOpen() {
+		return CheckInOpen;
+	}
+
+	public void setCheckInOpen(boolean checkInOpen) {
+		CheckInOpen = checkInOpen;
 	}
 
 }

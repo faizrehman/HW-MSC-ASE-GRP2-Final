@@ -2,27 +2,37 @@ package views;
 
 import java.awt.Dimension;
 import java.awt.Font;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 import interfaces.QueueObserver;
+import model.AllBooking;
+import model.AllFlight;
 import model.Booking;
 import model.CheckInDesk;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class FlightStatusDisplay extends JPanel implements QueueObserver{
 	private String FlightCode;
+	AllBooking objbookings;
 	JTextArea textPane = new JTextArea(5,22);
 	
-	public FlightStatusDisplay(CheckInDesk[] obj, String pFlightCode)
+	public FlightStatusDisplay(CheckInDesk[] obj, String pFlightCode,AllBooking pobjbookings,AllFlight objflights)
 	{
 		for(CheckInDesk chk: obj)
 		{
 			chk.registerObserver(this);
 		}
 		FlightCode=pFlightCode;
-		
+		objbookings=pobjbookings;
 		
 		JPanel jpanel=new JPanel();
 		jpanel.setPreferredSize(new Dimension(270, 200));
@@ -36,6 +46,20 @@ public class FlightStatusDisplay extends JPanel implements QueueObserver{
 		
 		jpanel.add(textPane);
 		add(jpanel);
+		
+		JButton btnNewButton = new JButton("CheckIn Close");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					objflights.getFlightByID(FlightCode).setCheckInOpen(false);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				textPane.enable(false);
+			}
+		});
+		jpanel.add(btnNewButton);
 		
 		setPreferredSize(new Dimension(270, 300));
 		setVisible(true);
@@ -60,9 +84,24 @@ public class FlightStatusDisplay extends JPanel implements QueueObserver{
 		// TODO Auto-generated method stub
 		if(FlightCode.equals(pFlightCode.trim()))
 		{
-			textPane.append(obj.getBookingReference() + obj.getFlightCode() + "\n");
+			HashMap<String, Booking> objreturned = objbookings.BookingsByFlightCode(FlightCode);
+			int count=0;
+			for(Booking value: objreturned.values()) {
+				  if (value.IsCheckedIn()==true) {
+				    count++;
+				  }
+				}
+			
+			textPane.setText("Total CheckedIn: "  + count + "\n" +
+					"Total Passengers: "  + objreturned.size());
 			
 		}
+		
+	}
+
+	@Override
+	public void updateRejectionBoard(Booking obj, String FlightCode) {
+		// TODO Auto-generated method stub
 		
 	}
 	

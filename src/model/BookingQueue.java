@@ -137,6 +137,12 @@ public class BookingQueue implements QueueSubject,Runnable {
 				
 			}
 
+			@Override
+			public void notifyRejectionBoard(Booking obj, String FlightCode) {
+				// TODO Auto-generated method stub
+				
+			}
+
 
 			
 }

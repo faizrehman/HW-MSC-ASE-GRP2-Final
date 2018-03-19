@@ -22,7 +22,9 @@ public interface QueueSubject {
 	public void notifyCheckInObservers(Booking obj,int DeskNumber);
 	
 	public void notifyFlightBoard(Booking obj,String FlightCode);
-	
+
+	public void notifyRejectionBoard(Booking obj,String FlightCode);
+
 	
 }
 
