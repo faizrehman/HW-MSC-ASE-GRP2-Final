@@ -104,5 +104,11 @@ public class FlightStatusDisplay extends JPanel implements QueueObserver{
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void OpenCheckInCounter() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

@@ -14,6 +14,7 @@ public interface QueueObserver {
 	public void updateFlightBoard(Booking obj,String FlightCode);
 	public void updateRejectionBoard(Booking obj,String FlightCode);
 	
+	public void OpenCheckInCounter();
 	
 }
 

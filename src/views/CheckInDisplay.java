@@ -59,6 +59,7 @@ public class CheckInDisplay extends JPanel implements QueueObserver{
 				textPane.setText(b.getPassenger().getPassengerFullName() + " is dropping off " +
 							"1 bag of " + String.valueOf(b.getCheckedInWeight()) + "KG for flight " + b.getFlightCode() +  ". A baggage fee of " + b.getWeightOverCharge() +  " AED is due.");
 			
+				
 				}catch(Exception ex)
 				{}
 				}
@@ -77,12 +78,20 @@ public class CheckInDisplay extends JPanel implements QueueObserver{
 			@Override
 			public void updateFlightBoard(Booking obj, String FlightCode) {
 				// TODO Auto-generated method stub
-				
+			
+				textPane.setText("");
 			}
 
 
 			@Override
 			public void updateRejectionBoard(Booking obj, String FlightCode) {
+				// TODO Auto-generated method stub
+				
+			}
+
+
+			@Override
+			public void OpenCheckInCounter() {
 				// TODO Auto-generated method stub
 				
 			}

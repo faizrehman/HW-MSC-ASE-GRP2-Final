@@ -27,7 +27,9 @@ public class QueueDisplay extends JFrame implements QueueObserver {
 
 	private BookingQueue bookingqueue;
 	private AllBooking objbooking;
+	private CheckInDisplay objCheckInDisplay;
 	JTextArea txtrReferenceNoPassenger = new JTextArea();
+	private Thread objthread;
 	
 	String[] header = {
 		   "Reference No", "Passeneger Name",
@@ -45,8 +47,10 @@ public class QueueDisplay extends JFrame implements QueueObserver {
 	/**
 	 * Create the panel.
 	 */
-	public QueueDisplay(AllBooking bobj,BookingQueue obj,CheckInDisplay chkin1,CheckInDisplay chkin2,FlightStatusDisplay flightView[],RejectionStatusDisplay viewRejectionBoard) {
+	public QueueDisplay(AllBooking bobj,BookingQueue obj,CheckInDisplay chkin[],
+			FlightStatusDisplay flightView[],RejectionStatusDisplay viewRejectionBoard,Thread pthread) {
 		objbooking=bobj;
+		objthread=pthread;
 		textField.setText("2000");
 		textField.setColumns(5);
 		
@@ -60,7 +64,7 @@ public class QueueDisplay extends JFrame implements QueueObserver {
 				dtm.setColumnIdentifiers(header);
 		
 				JPanel jpanel=new JPanel();
-				jpanel.setPreferredSize(new Dimension(830, 220));
+				jpanel.setPreferredSize(new Dimension(1240, 220));
 		        
 				
 				 table.setModel(dtm);
@@ -73,7 +77,7 @@ public class QueueDisplay extends JFrame implements QueueObserver {
 				 table.getColumnModel().getColumn(4).setMinWidth(100);
 		     
 	        JScrollPane scroll = new JScrollPane(table);
-	        scroll.setPreferredSize(new Dimension(830, 180));
+	        scroll.setPreferredSize(new Dimension(1240, 180));
 	        scroll.createHorizontalScrollBar();
 	        jpanel.add(lblNewLabel);
 	       lblSetQueueSpeed.setFont(new Font("Lucida Grande", Font.BOLD, 13));
@@ -96,12 +100,20 @@ public class QueueDisplay extends JFrame implements QueueObserver {
 			// add analog display in the middle
 			
 			jpanel=new JPanel();
-			jpanel.setPreferredSize(new Dimension(830, 300));
+			jpanel.setPreferredSize(new Dimension(1240, 300));
 	        
 			
-			jpanel.add(chkin1, BorderLayout.EAST);
+			jpanel.add(chkin[0], BorderLayout.EAST);
 			
-			jpanel.add(chkin2, BorderLayout.WEST);
+			jpanel.add(chkin[1], BorderLayout.CENTER);
+		
+			chkin[2].textPane.setText("Counter Closed");
+			chkin[2].textPane.enable(false);
+			
+			jpanel.add(chkin[2], BorderLayout.WEST);
+			
+			
+			objCheckInDisplay=chkin[2];
 			
 			jpanel.add(viewRejectionBoard, BorderLayout.CENTER);
 			
@@ -113,7 +125,7 @@ public class QueueDisplay extends JFrame implements QueueObserver {
 			}
 			add(jpanel);
 			
-			setSize(840, 980);
+			setSize(1250, 940);
 			this.setLocationRelativeTo(null);
 		      
 			setVisible(true);
@@ -154,11 +166,18 @@ public class QueueDisplay extends JFrame implements QueueObserver {
 
 	private void removeSelectedRow(String ReferenceNum)
 	{
+		try
+		{
 		for ( int i=dtm.getRowCount()-1; i>=0; i-- ) { 
 			if (dtm.getValueAt(i,0) == ReferenceNum) 
 			dtm.removeRow(i); 
 			return;
 			} 
+		}
+		catch(IndexOutOfBoundsException ex)
+		{
+			
+		}
 		
 	}
 
@@ -174,8 +193,6 @@ public class QueueDisplay extends JFrame implements QueueObserver {
 		}
 		else
 		{
-			//JOptionPane.showMessageDialog(this,objbooking.CheckedBookingDetails());
-			
 			lblNewLabel.setText("There are currently " + "0" + " people waiting in the queue:");
 			
 		}
@@ -194,6 +211,21 @@ public class QueueDisplay extends JFrame implements QueueObserver {
 		// TODO Auto-generated method stub
 		//JOptionPane.showMessageDialog(null,FlightCode,"Alert", JOptionPane.ERROR_MESSAGE);
 
+	}
+
+
+	@Override
+	public void OpenCheckInCounter() {
+		// TODO Auto-generated method stub
+		//Thread thread4 =
+				//new Thread(objCheckInModel);
+		if(!objthread.isAlive())
+		{
+
+		objCheckInDisplay.textPane.setText("Waiting For Passenger...");
+		objCheckInDisplay.textPane.enable(true);	
+		objthread.start();
+		}		
 	}
 
 

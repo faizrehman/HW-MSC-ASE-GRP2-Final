@@ -44,6 +44,8 @@ public class BookingQueue implements QueueSubject,Runnable {
 		// TODO Auto-generated method stub
 		//while(AllBookings.getQueue().peek() != null)
 		while(AllBookings.getQueue().peek() != null)
+		//while(true)
+			
 		{
 			try {
 				Thread.sleep(QueueSpeed);
@@ -87,12 +89,21 @@ public class BookingQueue implements QueueSubject,Runnable {
 				if(b!=null)
 				{
 					AllBookings.AddinActiveQueue(b);
+					if(AllBookings.getActiveQueue().size()>5)
+					{
+						notifyToOpenCheckInCounter();
+						
+					}
 					notifyObservers(b);
 				}
 				
 			}
 			catch (InterruptedException e) {
 				System.out.println(e.getMessage());	
+			}
+			catch(NullPointerException ex)
+			{
+				
 			}
 		}
 		
@@ -141,6 +152,13 @@ public class BookingQueue implements QueueSubject,Runnable {
 			public void notifyRejectionBoard(Booking obj, String FlightCode) {
 				// TODO Auto-generated method stub
 				
+			}
+
+			@Override
+			public void notifyToOpenCheckInCounter() {
+				// TODO Auto-generated method stub
+				for (QueueObserver obs : registeredObservers)
+					obs.OpenCheckInCounter();
 			}
 
 

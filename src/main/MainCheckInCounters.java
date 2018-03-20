@@ -55,14 +55,22 @@ public class MainCheckInCounters {
 		
 		
 		CheckInDesk chkinmodel=new CheckInDesk(bookings,1,flights);
-		CheckInDisplay view2 = new CheckInDisplay(chkinmodel,2);	
+		CheckInDisplay view2 = new CheckInDisplay(chkinmodel,1);	
 		CheckInDeskController controller2 =new CheckInDeskController(view2, chkinmodel);
 	
 		CheckInDesk chkinmodel2=new CheckInDesk(bookings,2,flights);
-		CheckInDisplay view3 = new CheckInDisplay(chkinmodel2,1);	
+		CheckInDisplay view3 = new CheckInDisplay(chkinmodel2,2);	
 		CheckInDeskController controller3 =new CheckInDeskController(view3, chkinmodel2);
 	
-		CheckInDesk arrChkInModel[]={chkinmodel,chkinmodel2};
+		
+		CheckInDesk chkinmodel3=new CheckInDesk(bookings,3,flights);
+		CheckInDisplay view4 = new CheckInDisplay(chkinmodel3,3);	
+		CheckInDeskController controller4 =new CheckInDeskController(view4, chkinmodel3);
+		
+		CheckInDesk arrChkInModel[]={chkinmodel,chkinmodel2,chkinmodel3};
+		
+		view4.enable(false);
+		CheckInDisplay viewCheckInDesk[]={view2,view3,view4};
 		
 		FlightStatusDisplay viewFlightStatusDisplay[]=new FlightStatusDisplay[flights.getAllFlights().size()];	
 		int i=0;
@@ -74,10 +82,13 @@ public class MainCheckInCounters {
 		
 		RejectionStatusDisplay viewRejectionBoard=new RejectionStatusDisplay(arrChkInModel);
 		
+		Thread thread4 =
+				new Thread(chkinmodel3);
+				//thread2.start();
 		
 		
 		BookingQueue model=BookingQueue.getInstance(bookings,flights);
-		QueueDisplay view = new QueueDisplay(bookings,model,view2,view3,viewFlightStatusDisplay,viewRejectionBoard);	
+		QueueDisplay view = new QueueDisplay(bookings,model,viewCheckInDesk,viewFlightStatusDisplay,viewRejectionBoard,thread4);	
 		QueueController controller =new QueueController(view, model);
 		
 		Thread thread1 =

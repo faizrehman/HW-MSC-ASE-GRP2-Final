@@ -31,22 +31,23 @@ public RejectionStatusDisplay(CheckInDesk objCheckInDesk[])
  
 	
 	JPanel jpanel=new JPanel();
-	jpanel.setPreferredSize(new Dimension(840, 200));
+	jpanel.setPreferredSize(new Dimension(1240, 200));
 	JLabel lblNewLabel = new JLabel("Rejected Passenger");
 	lblNewLabel.setFont(new Font("Lucida Grande", Font.BOLD, 16));
     jpanel.add(lblNewLabel);
      
     JScrollPane scroll = new JScrollPane(textPane);
-    scroll.setPreferredSize(new Dimension(830, 180));
+    scroll.setPreferredSize(new Dimension(1230, 180));
     scroll.createHorizontalScrollBar();
     jpanel.add(lblNewLabel); 
     jpanel.add(scroll);
     
     
-	
+    textPane.append("REF #" + "	" +  "FLIGHT"
+	 + "	" + "STATUS" + "	" + "REASON" + "\n");
 	add(jpanel);
 	
-	setPreferredSize(new Dimension(840, 200));
+	setPreferredSize(new Dimension(1240, 200));
 	setVisible(true);
 	
 	
@@ -88,10 +89,16 @@ public void updateRejectionBoard(Booking obj, String FlightCode) {
 	{
 		//JOptionPane.showMessageDialog(this,FlightCode,"Alert", JOptionPane.ERROR_MESSAGE);
 		
-	textPane.append(obj.getBookingReference() + "	" + obj.getPassenger().getPassengerFullName() + "		" +  obj.getFlightCode()
-	 + "	" + "Rejected" + "\n");
+	textPane.append(obj.getBookingReference() + "	" +  obj.getFlightCode()
+	 + "	" + "Rejected" + "	" +  "Check-In closed" + "\n");
 	}catch(Exception ex)
 	{}
 	}
+
+@Override
+public void OpenCheckInCounter() {
+	// TODO Auto-generated method stub
+	
+}
 }
 	

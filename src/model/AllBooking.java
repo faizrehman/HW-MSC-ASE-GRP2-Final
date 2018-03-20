@@ -244,5 +244,11 @@ public class AllBooking implements QueueSubject {
 			obs.updateRejectionBoard(obj,FlightCode);
 	
 	}
+
+	@Override
+	public void notifyToOpenCheckInCounter() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

@@ -29,10 +29,7 @@ public class CheckInDesk implements QueueSubject,Runnable  {
 	{
 		QueueSpeed=speed;
 	}
-	//public int getQueueCount()
-	//{
-	//	return bookingQueue.getQueueCount();
-	//}
+	
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
@@ -44,8 +41,6 @@ public class CheckInDesk implements QueueSubject,Runnable  {
 				Booking b=AllBookings.getFirstbooking();	
 				notifyObservers(b);
 				notifyCheckInObservers(b,DeskNumber);
-				//notifyFlightBoard(b, b.getFlightCode());
-					
 				
 				if(Allflights.getFlightByID(b.getFlightCode()).isCheckInOpen()){
 						
@@ -55,8 +50,6 @@ public class CheckInDesk implements QueueSubject,Runnable  {
 						}
 				else
 					{
-					//Thread.sleep(QueueSpeed);
-					//AllBookings.AddinRejectedQueue(b);
 					notifyRejectionBoard(b, b.getFlightCode());					
 					Thread.sleep(QueueSpeed);
 					}
@@ -114,6 +107,11 @@ public class CheckInDesk implements QueueSubject,Runnable  {
 				// TODO Auto-generated method stub
 				for (QueueObserver obs : registeredObservers)
 					obs.updateRejectionBoard(obj, FlightCode);
+				
+			}
+			@Override
+			public void notifyToOpenCheckInCounter() {
+				// TODO Auto-generated method stub
 				
 			}
 			

@@ -24,6 +24,9 @@ public interface QueueSubject {
 	public void notifyFlightBoard(Booking obj,String FlightCode);
 
 	public void notifyRejectionBoard(Booking obj,String FlightCode);
+	
+	public void notifyToOpenCheckInCounter();
+	
 
 	
 }
