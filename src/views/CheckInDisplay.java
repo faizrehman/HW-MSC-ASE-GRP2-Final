@@ -86,7 +86,7 @@ public class CheckInDisplay extends JPanel implements QueueObserver{
 			@Override
 			public void updateRejectionBoard(Booking obj, String FlightCode) {
 				// TODO Auto-generated method stub
-				
+				//textPane.setText("");
 			}
 
 

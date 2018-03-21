@@ -44,7 +44,8 @@ public class Booking {
 	
 
 			Integer length,breadth,height;
-		//if(BaggageDimension.matches("\\d{2}x\\d{2}x\\d{2}"))
+		if(BaggageDimension.length()>=5)
+		{
 			if(BaggageDimension.length()>2)
 				
 			{
@@ -64,6 +65,7 @@ public class Booking {
 			this.BaggageDimension=BaggageDimension;
 			}
 		}
+			}
 		else
 		{
 

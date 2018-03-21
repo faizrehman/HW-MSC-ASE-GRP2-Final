@@ -7,6 +7,7 @@ import java.util.Random;
 
 import javax.swing.JOptionPane;
 
+import common.AppLog;
 import exceptions.InValidCheckInException;
 import interfaces.QueueObserver;
 import interfaces.QueueSubject;
@@ -17,10 +18,12 @@ public class BookingQueue implements QueueSubject,Runnable {
 	AllBooking  AllBookings;
 	AllFlight  AllFlights;
 	private int QueueSpeed=2000;
+	private AppLog myLoge;
 	
 	private BookingQueue(AllBooking obj,AllFlight objFlights) {
 		AllBookings=obj;
 		AllFlights=objFlights;
+		myLoge= AppLog.getLogger();
 	}
 
 	public void setQueueSpeed(int speed)
@@ -94,6 +97,8 @@ public class BookingQueue implements QueueSubject,Runnable {
 						notifyToOpenCheckInCounter();
 						
 					}
+					myLoge.AddToLog("The passenger : "+b.getPassenger().getPassengerFullName() + " arrived in a Queue" ,"queue-arrival");
+					
 					notifyObservers(b);
 				}
 				

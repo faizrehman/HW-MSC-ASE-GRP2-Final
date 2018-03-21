@@ -1,5 +1,6 @@
 package views;
 
+import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.ArrayList;
@@ -27,6 +28,9 @@ public class FlightStatusDisplay extends JPanel implements QueueObserver{
 	
 	public FlightStatusDisplay(CheckInDesk[] obj, String pFlightCode,AllBooking pobjbookings,AllFlight objflights)
 	{
+		
+
+		
 		for(CheckInDesk chk: obj)
 		{
 			chk.registerObserver(this);
@@ -86,14 +90,19 @@ public class FlightStatusDisplay extends JPanel implements QueueObserver{
 		{
 			HashMap<String, Booking> objreturned = objbookings.BookingsByFlightCode(FlightCode);
 			int count=0;
+			int totalcount=objreturned.size();
 			for(Booking value: objreturned.values()) {
 				  if (value.IsCheckedIn()==true) {
 				    count++;
 				  }
 				}
 			
-			textPane.setText("Total CheckedIn: "  + count + "\n" +
-					"Total Passengers: "  + objreturned.size());
+			textPane.setText( pFlightCode + "\n" +
+					count + " checked-in of " + objreturned.size() + "\n" +
+					"Hold is " + (count*100/totalcount) + "%");
+				
+			
+			
 			
 		}
 		
